@@ -116,6 +116,8 @@ terraform {
 
 ## Relevant Images
 
+### Architecture Diagram
+![Architecture Diagram](images/architecture_diagram.png)
 
 ### Nginx Deployment on EC2
 ![Nginx Deployment on EC2](images/ec2.png)
