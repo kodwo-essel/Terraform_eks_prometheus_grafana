@@ -168,6 +168,8 @@ This monitoring solution gives me visibility into both infrastructure metrics an
 
 ## Relevant Images
 
+## Prometheus Dashboard
 ![Prometheus Dashboard](../images/prometheus.png)
 
+## Grafana Dashboard
 ![Grafana Dashboard](../images/grafana.png)

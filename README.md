@@ -117,13 +117,17 @@ terraform {
 ## Relevant Images
 
 
-
+### Nginx Deployment on EC2
 ![Nginx Deployment on EC2](images/ec2.png)
 
+### Kubernetes Deployment on EKS
 ![Kubernetes Deployment on EKS](images/kubernetes_deployment.png)
 
+### EKS Application Diagram
 ![EKS Application Diagram](images/architecture.jpg)
 
+### Voting App
 ![Voting App](images/voting_app.png)
 
+### Result App
 ![Result App](images/result_app.png)
