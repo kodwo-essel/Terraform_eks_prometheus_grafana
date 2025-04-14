@@ -8,9 +8,9 @@ variable "vpc_cidr" {
   type        = string
 }
 
-variable "public_subnet_cidr" {
+variable "public_subnet_cidrs" {
   description = "The CIDR block for the subnet"
-  type        = string
+  type        = list(string)
 }
 
 variable "private_subnet_cidr" {
@@ -36,4 +36,31 @@ variable "instance_type" {
 variable "public_ip" {
   description = "Whether to associate a public IP with the EC2 instance"
   type        = bool
+}
+
+variable "eks_cluster_name" {
+  type = string
+}
+
+variable "eks_node_group_name" {
+  type = string
+}
+
+variable "eks_node_group_role_name" {
+  type = string
+}
+
+variable "eks_cluster_role_name" {
+  type = string
+}
+
+variable "max_size" {
+    type = number
+}
+variable "min_size" {
+    type = number
+}
+
+variable "desired_size" {
+  type = number
 }

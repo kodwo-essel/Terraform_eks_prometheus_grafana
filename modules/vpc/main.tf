@@ -1,6 +1,6 @@
 # Create the VPC
 resource "aws_vpc" "main" {
-  cidr_block = var.cidr_block
+  cidr_block = var.vpc_cidr
   enable_dns_support = true
   enable_dns_hostnames = true
 }
@@ -15,7 +15,17 @@ module "subnets" {
   source              = "../subnets"
   vpc_id              = aws_vpc.main.id
   availability_zones  = var.availability_zones
-  public_subnet_cidr  = var.public_subnet_cidr
+  public_subnet_cidrs  = var.public_subnet_cidrs
   private_subnet_cidr = var.private_subnet_cidr
   internet_gateway_id = module.internet_gateway.internet_gateway_id
 }
+
+# module "subnets" {
+#   source              = "../subnets"
+#   vpc_id              = aws_vpc.main.id
+#   availability_zones  = var.availability_zones
+#   public_subnet_cidr  = var.public_subnet_cidr
+#   private_subnet_cidr = var.private_subnet_cidr
+#   internet_gateway_id = module.internet_gateway.internet_gateway_id
+# }
+
