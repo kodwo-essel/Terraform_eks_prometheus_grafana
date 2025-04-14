@@ -3,3 +3,4 @@
 credentials
 terraform.tfvars
 terraform.tfstate*
+aws*
