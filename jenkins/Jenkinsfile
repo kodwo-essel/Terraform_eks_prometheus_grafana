@@ -1,0 +1,69 @@
+pipeline {
+    agent any
+    
+    parameters {
+        choice(name: 'DEPLOY', choices: ['no', 'yes'], description: 'Deploy to Kubernetes?')
+    }
+    
+    environment {
+        DOCKER_HUB_CREDS = credentials('dockerhub-credentials')
+        KUBE_CONFIG = credentials('kube-config')
+        TERRAFORM_DIR = '.'
+        K8S_DEPLOY_SCRIPT = '../kubernetes/cat_dog.sh'
+    }
+    
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+        
+        stage('Build Voting App') {
+            steps {
+                build job: 'voting-app-pipeline'
+            }
+        }
+        
+        stage('Build Result App') {
+            steps {
+                build job: 'result-app-pipeline'
+            }
+        }
+        
+        stage('Build Worker') {
+            steps {
+                build job: 'worker-pipeline'
+            }
+        }
+        
+        stage('Deploy to Kubernetes') {
+            when {
+                expression { params.DEPLOY == 'yes' }
+            }
+            steps {
+                // Initialize Terraform
+                dir(TERRAFORM_DIR) {
+                    sh 'terraform init'
+                    sh 'terraform plan -out=tfplan'
+                    sh 'terraform apply -auto-approve tfplan'
+                }
+                
+                // Deploy to Kubernetes
+                sh "chmod +x ${K8S_DEPLOY_SCRIPT}"
+                withEnv(["KUBECONFIG=${KUBE_CONFIG}"]) {
+                    sh "${K8S_DEPLOY_SCRIPT}"
+                }
+            }
+        }
+    }
+    
+    post {
+        success {
+            echo 'Pipeline completed successfully!'
+        }
+        failure {
+            echo 'Pipeline failed!'
+        }
+    }
+}

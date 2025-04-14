@@ -1,0 +1,54 @@
+pipeline {
+    agent any
+
+    parameters {
+        booleanParam(name: 'deploy', defaultValue: false, description: 'Apply the Terraform plan to deploy EC2 instance')
+    }
+
+    environment {
+        AWS_REGION = 'us-east-1' // Change this as needed
+        TF_VAR_region = "${AWS_REGION}" // Optional if using tfvars or passing manually
+    }
+
+    stages {
+        stage('Terraform Init') {
+            steps {
+                script {
+                    dir('terraform/ec2-module') { // Change to your actual module path
+                        sh 'terraform init'
+                    }
+                }
+            }
+        }
+
+        stage('Terraform Plan') {
+            steps {
+                script {
+                    dir('terraform/ec2-module') {
+                        sh 'terraform plan -out=tfplan'
+                    }
+                }
+            }
+        }
+
+        stage('Terraform Apply') {
+            when {
+                expression { return params.deploy }
+            }
+            steps {
+                script {
+                    dir('terraform/ec2-module') {
+                        sh 'terraform apply tfplan'
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            echo "Terraform pipeline completed."
+        }
+    }
+}
+
